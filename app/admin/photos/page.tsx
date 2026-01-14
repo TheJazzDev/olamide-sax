@@ -16,16 +16,16 @@ const initialPhotos: PhotoItem[] = [
   {
     id: '1',
     title: 'Performance with Keyboard',
-    url: '/images/olamide-sax-hero.jpg',
+    url: '/images/olamide-sax-keyboard.jpg',
     category: 'Performance',
     alt: 'Olamide Sax performing with keyboard',
   },
   {
     id: '2',
     title: 'With Distinguished Guest',
-    url: '/images/olamide-sax-mayor.jpg',
+    url: '/images/olamide-sax-guest.jpg',
     category: 'Event',
-    alt: 'Olamide Sax at cultural event',
+    alt: 'Olamide Sax with distinguished guest',
   },
   {
     id: '3',
@@ -33,6 +33,20 @@ const initialPhotos: PhotoItem[] = [
     url: '/images/olamide-sax-portrait.jpg',
     category: 'Portrait',
     alt: 'Olamide Sax portrait with saxophone',
+  },
+  {
+    id: '4',
+    title: 'Making Space Event',
+    url: '/images/olamide-sax-carers-support.jpg',
+    category: 'Community',
+    alt: 'Olamide Sax at Making Space Doncaster Carers Support Group',
+  },
+  {
+    id: '5',
+    title: 'BME United Doncaster',
+    url: '/images/olamide-sax-bme-performance.jpg',
+    category: 'Performance',
+    alt: 'Olamide Sax performing saxophone at BME United Doncaster',
   },
 ];
 

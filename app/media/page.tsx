@@ -34,19 +34,29 @@ const videos = [
 
 const photos = [
   {
-    src: '/images/olamide-sax-hero.jpg',
-    alt: 'Olamide Sax performing with saxophone',
+    src: '/images/olamide-sax-keyboard.jpg',
+    alt: 'Olamide Sax performing with keyboard',
     category: 'Performance',
   },
   {
-    src: '/images/olamide-sax-mayor.jpg',
-    alt: 'Olamide Sax with dignitary',
+    src: '/images/olamide-sax-guest.jpg',
+    alt: 'Olamide Sax with distinguished guest',
     category: 'Event',
   },
   {
     src: '/images/olamide-sax-portrait.jpg',
-    alt: 'Olamide Sax portrait',
+    alt: 'Olamide Sax portrait with saxophone',
     category: 'Portrait',
+  },
+  {
+    src: '/images/olamide-sax-carers-support.jpg',
+    alt: 'Olamide Sax at Making Space Doncaster Carers Support Group',
+    category: 'Community',
+  },
+  {
+    src: '/images/olamide-sax-bme-performance.jpg',
+    alt: 'Olamide Sax performing saxophone at BME United Doncaster',
+    category: 'Performance',
   },
 ];
 
@@ -206,11 +216,11 @@ export default function MediaPage() {
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {photos.map((photo, index) => (
               <div
                 key={index}
-                className="group relative aspect-[3/4] rounded-xl overflow-hidden cursor-pointer"
+                className="group relative aspect-[4/5] rounded-xl overflow-hidden cursor-pointer bg-gray-100"
               >
                 <Image
                   src={photo.src}

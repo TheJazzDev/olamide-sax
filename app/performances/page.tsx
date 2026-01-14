@@ -28,6 +28,12 @@ const highlights = [
     icon: Users,
   },
   {
+    title: 'Making Space - We All Are One',
+    location: 'Doncaster, UK',
+    description: 'Performed at the Doncaster Carers Support Group event, bringing joy and cultural enrichment to carers and the community.',
+    icon: Users,
+  },
+  {
     title: 'Gospel & Worship Performances',
     location: 'Various Venues, UK',
     description: 'Regular live gospel and worship performances at community centres, churches, and faith-based gatherings.',
@@ -62,8 +68,8 @@ export default function PerformancesPage() {
             <div className="relative">
               <div className="relative aspect-[4/3] rounded-xl overflow-hidden">
                 <Image
-                  src="/images/olamide-sax-mayor.jpg"
-                  alt="Olamide Sax performing for the Mayor of Doncaster"
+                  src="/images/olamide-sax-bme-performance.jpg"
+                  alt="Olamide Sax performing at BME United Doncaster"
                   fill
                   className="object-cover"
                 />

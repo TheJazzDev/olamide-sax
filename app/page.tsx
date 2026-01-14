@@ -62,7 +62,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-[#c9a227]/20 rounded-2xl transform rotate-3" />
                 <div className="relative h-full rounded-2xl overflow-hidden border-4 border-[#c9a227]/30">
                   <Image
-                    src="/images/olamide-sax-hero.jpg"
+                    src="/images/olamide-sax-portrait.jpg"
                     alt="Olamide Sax - Professional Saxophonist"
                     fill
                     className="object-cover"
@@ -198,8 +198,8 @@ export default function Home() {
             <div className="relative">
               <div className="relative aspect-[4/3] rounded-xl overflow-hidden">
                 <Image
-                  src="/images/olamide-sax-mayor.jpg"
-                  alt="Olamide Sax with Mayor of Doncaster"
+                  src="/images/olamide-sax-guest.jpg"
+                  alt="Olamide Sax with distinguished guest"
                   fill
                   className="object-cover"
                 />
