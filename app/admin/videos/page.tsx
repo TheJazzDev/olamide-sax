@@ -1,61 +1,83 @@
 'use client';
 
-import { useState } from 'react';
-import { Video, Plus, Trash2, ExternalLink, Save, Youtube } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Video as VideoIcon, Plus, Trash2, ExternalLink, Save, Youtube, Loader2 } from 'lucide-react';
 
 interface VideoItem {
-  id: string;
+  id: number;
   title: string;
   url: string;
   platform: string;
-  description: string;
+  description: string | null;
+  featured: boolean;
+  displayOrder: number;
 }
 
-const initialVideos: VideoItem[] = [
-  {
-    id: '1',
-    title: 'Vibes Grooves Mixtape Vol. 1',
-    url: 'https://youtube.com/@olamidesax',
-    platform: 'youtube',
-    description: 'A collection of soulful saxophone and vocal performances.',
-  },
-  {
-    id: '2',
-    title: 'Gbedu Vibes',
-    url: 'https://youtube.com/@olamidesax',
-    platform: 'youtube',
-    description: 'African contemporary music performance.',
-  },
-  {
-    id: '3',
-    title: 'Live Performance - BME United Doncaster',
-    url: 'https://youtube.com/@olamidesax',
-    platform: 'youtube',
-    description: 'Cultural celebration performance.',
-  },
-];
-
 export default function AdminVideosPage() {
-  const [videos, setVideos] = useState<VideoItem[]>(initialVideos);
+  const [videos, setVideos] = useState<VideoItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     url: '',
     platform: 'youtube',
     description: '',
+    featured: false,
+    displayOrder: 0,
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editingId) {
-      setVideos(videos.map(v =>
-        v.id === editingId ? { ...v, ...formData } : v
-      ));
-    } else {
-      setVideos([...videos, { ...formData, id: Date.now().toString() }]);
+  useEffect(() => {
+    fetchVideos();
+  }, []);
+
+  const fetchVideos = async () => {
+    try {
+      const response = await fetch('/api/videos');
+      const data = await response.json();
+      setVideos(data);
+    } catch (error) {
+      console.error('Error fetching videos:', error);
+      alert('Failed to load videos');
+    } finally {
+      setLoading(false);
     }
-    resetForm();
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+
+    try {
+      if (editingId) {
+        const response = await fetch(`/api/videos/${editingId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) throw new Error('Failed to update');
+        alert('Video updated successfully!');
+      } else {
+        const response = await fetch('/api/videos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) throw new Error('Failed to create');
+        alert('Video created successfully!');
+      }
+
+      fetchVideos();
+      resetForm();
+    } catch (error) {
+      console.error('Error saving video:', error);
+      alert('Failed to save video');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleEdit = (video: VideoItem) => {
@@ -63,30 +85,48 @@ export default function AdminVideosPage() {
       title: video.title,
       url: video.url,
       platform: video.platform,
-      description: video.description,
+      description: video.description || '',
+      featured: video.featured,
+      displayOrder: video.displayOrder,
     });
     setEditingId(video.id);
     setShowForm(true);
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this video?')) {
-      setVideos(videos.filter(v => v.id !== id));
+  const handleDelete = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this video?')) return;
+
+    try {
+      const response = await fetch(`/api/videos/${id}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Failed to delete');
+      alert('Video deleted successfully!');
+      fetchVideos();
+    } catch (error) {
+      console.error('Error deleting video:', error);
+      alert('Failed to delete video');
     }
   };
 
   const resetForm = () => {
-    setFormData({ title: '', url: '', platform: 'youtube', description: '' });
+    setFormData({ title: '', url: '', platform: 'youtube', description: '', featured: false, displayOrder: 0 });
     setEditingId(null);
     setShowForm(false);
   };
 
+  if (loading) {
+    return (
+      <div className="p-6 lg:p-8 flex items-center justify-center min-h-screen">
+        <Loader2 className="w-8 h-8 animate-spin text-[#c9a227]" />
+      </div>
+    );
+  }
+
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 md:p-7 lg:p-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Videos</h1>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Videos</h1>
           <p className="text-gray-600 mt-1">Manage video content for the Media page</p>
         </div>
         <button
@@ -101,8 +141,8 @@ export default function AdminVideosPage() {
       {/* Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl p-6 w-full max-w-lg">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
+          <div className="bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-6">
               {editingId ? 'Edit Video' : 'Add New Video'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -113,7 +153,7 @@ export default function AdminVideosPage() {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none text-gray-900 placeholder:text-gray-400"
                   placeholder="Video title"
                 />
               </div>
@@ -124,7 +164,7 @@ export default function AdminVideosPage() {
                   value={formData.url}
                   onChange={(e) => setFormData({ ...formData, url: e.target.value })}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none text-gray-900 placeholder:text-gray-400"
                   placeholder="https://youtube.com/watch?v=..."
                 />
               </div>
@@ -133,7 +173,7 @@ export default function AdminVideosPage() {
                 <select
                   value={formData.platform}
                   onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none bg-white"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none bg-white text-gray-900"
                 >
                   <option value="youtube">YouTube</option>
                   <option value="instagram">Instagram</option>
@@ -146,7 +186,7 @@ export default function AdminVideosPage() {
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={3}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none resize-none"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none resize-none text-gray-900 placeholder:text-gray-400"
                   placeholder="Brief description of the video"
                 />
               </div>
@@ -154,16 +194,27 @@ export default function AdminVideosPage() {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="flex-1 px-4 py-3 border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                  disabled={saving}
+                  className="flex-1 px-4 py-3 border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#c9a227] text-[#1a1a2e] font-semibold rounded-lg hover:bg-[#e8d48b] transition-colors"
+                  disabled={saving}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#c9a227] text-[#1a1a2e] font-semibold rounded-lg hover:bg-[#e8d48b] transition-colors disabled:opacity-50"
                 >
-                  <Save className="w-5 h-5" />
-                  {editingId ? 'Update' : 'Add Video'}
+                  {saving ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-5 h-5" />
+                      {editingId ? 'Update' : 'Add Video'}
+                    </>
+                  )}
                 </button>
               </div>
             </form>
@@ -176,44 +227,51 @@ export default function AdminVideosPage() {
         <div className="p-4 bg-gray-50 border-b border-gray-100">
           <h2 className="font-semibold text-gray-900">{videos.length} Videos</h2>
         </div>
-        <div className="divide-y divide-gray-100">
-          {videos.map((video) => (
-            <div key={video.id} className="p-4 hover:bg-gray-50 transition-colors">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Youtube className="w-6 h-6 text-red-500" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900">{video.title}</h3>
-                  <p className="text-sm text-gray-500 mt-1">{video.description}</p>
-                  <a
-                    href={video.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm text-[#c9a227] hover:underline mt-2"
-                  >
-                    {video.url}
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => handleEdit(video)}
-                    className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(video.id)}
-                    className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+        {videos.length === 0 ? (
+          <div className="p-8 text-center text-gray-500">
+            <VideoIcon className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            <p>No videos yet. Add your first video!</p>
+          </div>
+        ) : (
+          <div className="divide-y divide-gray-100">
+            {videos.map((video) => (
+              <div key={video.id} className="p-4 hover:bg-gray-50 transition-colors">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center shrink-0">
+                    <Youtube className="w-6 h-6 text-red-500" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-900">{video.title}</h3>
+                    <p className="text-sm text-gray-500 mt-1">{video.description}</p>
+                    <a
+                      href={video.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-sm text-[#c9a227] hover:underline mt-2"
+                    >
+                      {video.url}
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleEdit(video)}
+                      className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(video.id)}
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Info */}

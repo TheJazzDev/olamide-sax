@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Newspaper, Plus, Trash2, ExternalLink, Save } from 'lucide-react';
 
 interface PressItem {
@@ -12,21 +12,12 @@ interface PressItem {
   date: string;
 }
 
-const initialPress: PressItem[] = [
-  {
-    id: '1',
-    title: 'Nigerian Saxophonist Olamide Sax Performs at BME United Doncaster',
-    source: 'Community Publication',
-    url: '#',
-    excerpt: 'Olamide Sax delivered a memorable performance at the BME United Doncaster event, showcasing the rich blend of African contemporary and gospel music.',
-    date: '2024',
-  },
-];
-
 export default function AdminPressPage() {
-  const [press, setPress] = useState<PressItem[]>(initialPress);
+  const [press, setPress] = useState<PressItem[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     source: '',
@@ -35,16 +26,53 @@ export default function AdminPressPage() {
     date: new Date().getFullYear().toString(),
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editingId) {
-      setPress(press.map(p =>
-        p.id === editingId ? { ...p, ...formData } : p
-      ));
-    } else {
-      setPress([...press, { ...formData, id: Date.now().toString() }]);
+  useEffect(() => {
+    fetchPress();
+  }, []);
+
+  const fetchPress = async () => {
+    try {
+      const response = await fetch('/api/press');
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
+      setPress(data);
+    } catch (error) {
+      console.error('Error fetching press:', error);
+      alert('Failed to load press items');
+    } finally {
+      setLoading(false);
     }
-    resetForm();
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      if (editingId) {
+        const response = await fetch(`/api/press/${editingId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+        if (!response.ok) throw new Error('Failed to update');
+        alert('Press item updated successfully!');
+      } else {
+        const response = await fetch('/api/press', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+        if (!response.ok) throw new Error('Failed to create');
+        alert('Press item created successfully!');
+      }
+      fetchPress();
+      resetForm();
+    } catch (error) {
+      console.error('Error saving press:', error);
+      alert('Failed to save press item');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleEdit = (item: PressItem) => {
@@ -59,9 +87,19 @@ export default function AdminPressPage() {
     setShowForm(true);
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this press item?')) {
-      setPress(press.filter(p => p.id !== id));
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this press item?')) return;
+
+    try {
+      const response = await fetch(`/api/press/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
+      alert('Press item deleted successfully!');
+      fetchPress();
+    } catch (error) {
+      console.error('Error deleting press:', error);
+      alert('Failed to delete press item');
     }
   };
 
@@ -77,12 +115,23 @@ export default function AdminPressPage() {
     setShowForm(false);
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-[#c9a227] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading press...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 md:p-7 lg:p-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Press</h1>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Press</h1>
           <p className="text-gray-600 mt-1">Manage press coverage and publications</p>
         </div>
         <button
@@ -98,7 +147,7 @@ export default function AdminPressPage() {
       {showForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-6">
               {editingId ? 'Edit Press Item' : 'Add New Press Item'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -109,7 +158,7 @@ export default function AdminPressPage() {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none text-gray-900 placeholder:text-gray-400"
                   placeholder="Article headline"
                 />
               </div>
@@ -120,7 +169,7 @@ export default function AdminPressPage() {
                   value={formData.source}
                   onChange={(e) => setFormData({ ...formData, source: e.target.value })}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none text-gray-900 placeholder:text-gray-400"
                   placeholder="e.g., Local Newspaper, BBC, etc."
                 />
               </div>
@@ -130,7 +179,7 @@ export default function AdminPressPage() {
                   type="text"
                   value={formData.url}
                   onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none text-gray-900 placeholder:text-gray-400"
                   placeholder="https://..."
                 />
               </div>
@@ -140,7 +189,7 @@ export default function AdminPressPage() {
                   value={formData.excerpt}
                   onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                   rows={4}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none resize-none"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none resize-none text-gray-900 placeholder:text-gray-400"
                   placeholder="Brief summary of the article"
                 />
               </div>
@@ -151,7 +200,7 @@ export default function AdminPressPage() {
                   value={formData.date}
                   onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none text-gray-900 placeholder:text-gray-400"
                   placeholder="2024"
                 />
               </div>
@@ -165,10 +214,11 @@ export default function AdminPressPage() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#c9a227] text-[#1a1a2e] font-semibold rounded-lg hover:bg-[#e8d48b] transition-colors"
+                  disabled={saving}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#c9a227] text-[#1a1a2e] font-semibold rounded-lg hover:bg-[#e8d48b] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Save className="w-5 h-5" />
-                  {editingId ? 'Update' : 'Add Press'}
+                  {saving ? 'Saving...' : (editingId ? 'Update' : 'Add Press')}
                 </button>
               </div>
             </form>

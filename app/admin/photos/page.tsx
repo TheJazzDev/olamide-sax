@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Image as ImageIcon, Plus, Trash2, Save, Upload } from 'lucide-react';
 
@@ -12,34 +12,12 @@ interface PhotoItem {
   alt: string;
 }
 
-const initialPhotos: PhotoItem[] = [
-  {
-    id: '1',
-    title: 'Performance with Keyboard',
-    url: '/images/olamide-sax-hero.jpg',
-    category: 'Performance',
-    alt: 'Olamide Sax performing with keyboard',
-  },
-  {
-    id: '2',
-    title: 'With Distinguished Guest',
-    url: '/images/olamide-sax-mayor.jpg',
-    category: 'Event',
-    alt: 'Olamide Sax at cultural event',
-  },
-  {
-    id: '3',
-    title: 'Professional Portrait',
-    url: '/images/olamide-sax-portrait.jpg',
-    category: 'Portrait',
-    alt: 'Olamide Sax portrait with saxophone',
-  },
-];
-
 export default function AdminPhotosPage() {
-  const [photos, setPhotos] = useState<PhotoItem[]>(initialPhotos);
+  const [photos, setPhotos] = useState<PhotoItem[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     url: '',
@@ -47,16 +25,53 @@ export default function AdminPhotosPage() {
     alt: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editingId) {
-      setPhotos(photos.map(p =>
-        p.id === editingId ? { ...p, ...formData } : p
-      ));
-    } else {
-      setPhotos([...photos, { ...formData, id: Date.now().toString() }]);
+  useEffect(() => {
+    fetchPhotos();
+  }, []);
+
+  const fetchPhotos = async () => {
+    try {
+      const response = await fetch('/api/photos');
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
+      setPhotos(data);
+    } catch (error) {
+      console.error('Error fetching photos:', error);
+      alert('Failed to load photos');
+    } finally {
+      setLoading(false);
     }
-    resetForm();
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      if (editingId) {
+        const response = await fetch(`/api/photos/${editingId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+        if (!response.ok) throw new Error('Failed to update');
+        alert('Photo updated successfully!');
+      } else {
+        const response = await fetch('/api/photos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+        if (!response.ok) throw new Error('Failed to create');
+        alert('Photo created successfully!');
+      }
+      fetchPhotos();
+      resetForm();
+    } catch (error) {
+      console.error('Error saving photo:', error);
+      alert('Failed to save photo');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleEdit = (photo: PhotoItem) => {
@@ -70,9 +85,19 @@ export default function AdminPhotosPage() {
     setShowForm(true);
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this photo?')) {
-      setPhotos(photos.filter(p => p.id !== id));
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this photo?')) return;
+
+    try {
+      const response = await fetch(`/api/photos/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete');
+      alert('Photo deleted successfully!');
+      fetchPhotos();
+    } catch (error) {
+      console.error('Error deleting photo:', error);
+      alert('Failed to delete photo');
     }
   };
 
@@ -82,12 +107,23 @@ export default function AdminPhotosPage() {
     setShowForm(false);
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-[#c9a227] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading photos...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 md:p-7 lg:p-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Photos</h1>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Photos</h1>
           <p className="text-gray-600 mt-1">Manage photos for the Media gallery</p>
         </div>
         <button
@@ -103,7 +139,7 @@ export default function AdminPhotosPage() {
       {showForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-6 w-full max-w-lg">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-6">
               {editingId ? 'Edit Photo' : 'Add New Photo'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -114,7 +150,7 @@ export default function AdminPhotosPage() {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none text-gray-900 placeholder:text-gray-400"
                   placeholder="Photo title"
                 />
               </div>
@@ -125,7 +161,7 @@ export default function AdminPhotosPage() {
                   value={formData.url}
                   onChange={(e) => setFormData({ ...formData, url: e.target.value })}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none text-gray-900 placeholder:text-gray-400"
                   placeholder="/images/photo-name.jpg"
                 />
                 <p className="text-xs text-gray-500 mt-1">
@@ -137,7 +173,7 @@ export default function AdminPhotosPage() {
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none bg-white"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none bg-white text-gray-900"
                 >
                   <option value="Performance">Performance</option>
                   <option value="Portrait">Portrait</option>
@@ -150,7 +186,7 @@ export default function AdminPhotosPage() {
                   type="text"
                   value={formData.alt}
                   onChange={(e) => setFormData({ ...formData, alt: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none text-gray-900 placeholder:text-gray-400"
                   placeholder="Description for accessibility"
                 />
               </div>
@@ -164,10 +200,11 @@ export default function AdminPhotosPage() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#c9a227] text-[#1a1a2e] font-semibold rounded-lg hover:bg-[#e8d48b] transition-colors"
+                  disabled={saving}
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#c9a227] text-[#1a1a2e] font-semibold rounded-lg hover:bg-[#e8d48b] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Save className="w-5 h-5" />
-                  {editingId ? 'Update' : 'Add Photo'}
+                  {saving ? 'Saving...' : (editingId ? 'Update' : 'Add Photo')}
                 </button>
               </div>
             </form>

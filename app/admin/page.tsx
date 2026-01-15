@@ -1,14 +1,15 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Video, Image, Music, Newspaper, Plus, ExternalLink } from 'lucide-react';
 
-const stats = [
-  { label: 'Videos', count: 3, icon: Video, href: '/admin/videos', color: 'bg-blue-500' },
-  { label: 'Photos', count: 3, icon: Image, href: '/admin/photos', color: 'bg-green-500' },
-  { label: 'Music Releases', count: 3, icon: Music, href: '/admin/music', color: 'bg-purple-500' },
-  { label: 'Press Items', count: 1, icon: Newspaper, href: '/admin/press', color: 'bg-orange-500' },
-];
+interface Stats {
+  videos: number;
+  photos: number;
+  music: number;
+  press: number;
+}
 
 const quickActions = [
   { label: 'Add Video', href: '/admin/videos', icon: Video },
@@ -18,38 +19,94 @@ const quickActions = [
 ];
 
 export default function AdminDashboard() {
+  const [stats, setStats] = useState<Stats>({ videos: 0, photos: 0, music: 0, press: 0 });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      const [videosRes, photosRes, musicRes, pressRes] = await Promise.all([
+        fetch('/api/videos'),
+        fetch('/api/photos'),
+        fetch('/api/music'),
+        fetch('/api/press'),
+      ]);
+
+      const videos = await videosRes.json();
+      const photos = await photosRes.json();
+      const music = await musicRes.json();
+      const press = await pressRes.json();
+
+      setStats({
+        videos: videos.length,
+        photos: photos.length,
+        music: music.length,
+        press: press.length,
+      });
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const statCards = [
+    { label: 'Videos', count: stats.videos, icon: Video, href: '/admin/videos', color: 'bg-blue-500' },
+    { label: 'Photos', count: stats.photos, icon: Image, href: '/admin/photos', color: 'bg-green-500' },
+    { label: 'Music Releases', count: stats.music, icon: Music, href: '/admin/music', color: 'bg-purple-500' },
+    { label: 'Press Items', count: stats.press, icon: Newspaper, href: '/admin/press', color: 'bg-orange-500' },
+  ];
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 md:p-7 lg:p-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Dashboard</h1>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Dashboard</h1>
         <p className="text-gray-600 mt-1">Welcome to the Olamide Sax admin panel</p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {stats.map((stat) => (
-          <Link
-            key={stat.label}
-            href={stat.href}
-            className="bg-white rounded-xl p-6 hover:shadow-md transition-shadow"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">{stat.label}</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">{stat.count}</p>
+        {loading ? (
+          <>
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-white rounded-xl p-6 animate-pulse">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="h-4 bg-gray-200 rounded w-20 mb-2"></div>
+                    <div className="h-8 bg-gray-200 rounded w-12"></div>
+                  </div>
+                  <div className="w-12 h-12 bg-gray-200 rounded-xl"></div>
+                </div>
               </div>
-              <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center`}>
-                <stat.icon className="w-6 h-6 text-white" />
+            ))}
+          </>
+        ) : (
+          statCards.map((stat) => (
+            <Link
+              key={stat.label}
+              href={stat.href}
+              className="bg-white rounded-xl p-6 hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">{stat.label}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">{stat.count}</p>
+                </div>
+                <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center`}>
+                  <stat.icon className="w-6 h-6 text-white" />
+                </div>
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))
+        )}
       </div>
 
       {/* Quick Actions */}
       <div className="bg-white rounded-xl p-6 mb-8">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h2>
+        <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-4">Quick Actions</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {quickActions.map((action) => (
             <Link
@@ -68,7 +125,7 @@ export default function AdminDashboard() {
 
       {/* Instructions */}
       <div className="bg-white rounded-xl p-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">How to Use</h2>
+        <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-4">How to Use</h2>
         <div className="prose prose-sm max-w-none text-gray-600">
           <p className="mb-4">
             This admin panel allows you to manage dynamic content on your portfolio website.
@@ -76,16 +133,16 @@ export default function AdminDashboard() {
           </p>
           <ul className="space-y-2">
             <li>
-              <strong>Videos:</strong> Add YouTube video links that will appear on the Media page
+              <strong>Videos:</strong> Add YouTube video links that will appear in the Media page Videos tab
             </li>
             <li>
-              <strong>Photos:</strong> Upload and manage photos for the gallery
+              <strong>Photos:</strong> Upload and manage photos that appear in the Media page Photos tab
             </li>
             <li>
-              <strong>Music:</strong> Add streaming links for your music releases
+              <strong>Music:</strong> Add streaming links for your music releases (appears in Media page Audio tab)
             </li>
             <li>
-              <strong>Press:</strong> Add newspaper and publication features
+              <strong>Press:</strong> Add newspaper and publication features on the Press page
             </li>
           </ul>
           <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">

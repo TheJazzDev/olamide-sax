@@ -40,9 +40,12 @@ export default function AdminLayout({
     const adminToken = localStorage.getItem('admin_token');
     if (adminToken === 'olamide-sax-admin-authenticated') {
       setIsAuthenticated(true);
+    } else if (pathname !== '/admin/login') {
+      // Redirect to login if not authenticated
+      router.push('/admin/login');
     }
     setIsLoading(false);
-  }, []);
+  }, [pathname, router]);
 
   const handleLogout = () => {
     localStorage.removeItem('admin_token');
@@ -60,9 +63,6 @@ export default function AdminLayout({
 
   // Show login page if not authenticated
   if (!isAuthenticated && pathname !== '/admin/login') {
-    if (typeof window !== 'undefined') {
-      router.push('/admin/login');
-    }
     return null;
   }
 
