@@ -12,7 +12,6 @@ import {
   LogOut,
   Menu,
   X,
-  Settings,
   Home
 } from 'lucide-react';
 
@@ -37,14 +36,18 @@ export default function AdminLayout({
 
   useEffect(() => {
     // Check if user is authenticated
-    const adminToken = localStorage.getItem('admin_token');
-    if (adminToken === 'olamide-sax-admin-authenticated') {
-      setIsAuthenticated(true);
-    } else if (pathname !== '/admin/login') {
-      // Redirect to login if not authenticated
-      router.push('/admin/login');
-    }
-    setIsLoading(false);
+    const checkAuth = () => {
+      const adminToken = localStorage.getItem('admin_token');
+      if (adminToken === 'olamide-sax-admin-authenticated') {
+        setIsAuthenticated(true);
+      } else if (pathname !== '/admin/login') {
+        // Redirect to login if not authenticated
+        router.push('/admin/login');
+      }
+      setIsLoading(false);
+    };
+
+    checkAuth();
   }, [pathname, router]);
 
   const handleLogout = () => {

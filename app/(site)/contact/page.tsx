@@ -1,5 +1,4 @@
-import Link from 'next/link';
-import { Mail, MapPin, Music, Youtube, Instagram, Facebook, Send, Phone } from 'lucide-react';
+import { Mail, MapPin, Music, Youtube, Instagram, Facebook, Send } from 'lucide-react';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

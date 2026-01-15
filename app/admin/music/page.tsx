@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Music, Plus, Trash2, ExternalLink, Save, Disc } from 'lucide-react';
+import { Plus, Trash2, ExternalLink, Save, Disc } from 'lucide-react';
 
 interface MusicItem {
   id: string;

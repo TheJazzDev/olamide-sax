@@ -557,7 +557,7 @@ export default function Home() {
 
         <div className="container-custom text-center relative z-10">
           <div className="inline-block mb-3 sm:mb-4">
-            <span className="text-[#1a1a2e]/70 text-xs sm:text-sm font-semibold uppercase tracking-wider">Let's Work Together</span>
+            <span className="text-[#1a1a2e]/70 text-xs sm:text-sm font-semibold uppercase tracking-wider">Let&apos;s Work Together</span>
             <div className="w-16 sm:w-20 h-1 bg-[#1a1a2e]/30 mx-auto mt-2" />
           </div>
           <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#1a1a2e] mb-3 sm:mb-4">

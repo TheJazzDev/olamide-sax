@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Lock, Music, Eye, EyeOff } from 'lucide-react';
 
 export default function AdminLoginPage() {
@@ -86,9 +87,9 @@ export default function AdminLoginPage() {
 
         <p className="text-center text-gray-500 text-sm mt-6">
           Return to{' '}
-          <a href="/" className="text-[#c9a227] hover:underline">
+          <Link href="/" className="text-[#c9a227] hover:underline">
             main website
-          </a>
+          </Link>
         </p>
       </div>
     </div>
