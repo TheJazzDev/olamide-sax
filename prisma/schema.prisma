@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Admin users
+model Admin {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("admins")
+}
+
+// Videos
+model Video {
+  id           Int      @id @default(autoincrement())
+  title        String
+  url          String
+  platform     String   // youtube, audiomack, instagram
+  description  String?
+  featured     Boolean  @default(false)
+  displayOrder Int      @default(0) @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("videos")
+}
+
+// Audios
+model Audio {
+  id           Int      @id @default(autoincrement())
+  title        String
+  url          String
+  platform     String   // audiomack, spotify, etc
+  description  String?
+  displayOrder Int      @default(0) @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("audios")
+}
+
+// Photos
+model Photo {
+  id           Int      @id @default(autoincrement())
+  title        String
+  url          String
+  alt          String?
+  category     String?  // performance, portrait, event
+  featured     Boolean  @default(false)
+  displayOrder Int      @default(0) @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("photos")
+}
+
+// Press
+model Press {
+  id           Int       @id @default(autoincrement())
+  title        String
+  source       String
+  url          String?
+  imageUrl     String?   @map("image_url")
+  excerpt      String?
+  publishedAt  DateTime? @map("published_at")
+  displayOrder Int       @default(0) @map("display_order")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  @@map("press")
+}
+
+// Music
+model Music {
+  id           Int      @id @default(autoincrement())
+  title        String
+  platform     String   // audiomack, spotify, apple music
+  url          String
+  releaseYear  String?  @map("release_year")
+  coverUrl     String?  @map("cover_url")
+  displayOrder Int      @default(0) @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@map("music")
+}
+
+// Site Settings
+model SiteSettings {
+  id           Int     @id @default(autoincrement())
+  heroTitle    String? @default("Olamide Sax") @map("hero_title")
+  heroSubtitle String? @default("Vocalist • Saxophonist • Keyboardist") @map("hero_subtitle")
+  email        String? @default("Olaniyanolamidephillip@gmail.com")
+  youtubeUrl   String? @map("youtube_url")
+  instagramUrl String? @map("instagram_url")
+  facebookUrl  String? @map("facebook_url")
+  twitterUrl   String? @map("twitter_url")
+
+  @@map("site_settings")
+}

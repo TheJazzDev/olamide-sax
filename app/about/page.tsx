@@ -37,7 +37,7 @@ export default function AboutPage() {
               <div className="sticky top-32">
                 <div className="relative aspect-[3/4] rounded-xl overflow-hidden">
                   <Image
-                    src="/images/olamide-sax-portrait.jpg"
+                    src="/images/IMG_0923.jpeg"
                     alt="Olamide Sax Portrait"
                     fill
                     className="object-cover"

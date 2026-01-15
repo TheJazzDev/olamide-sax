@@ -34,19 +34,29 @@ const videos = [
 
 const photos = [
   {
-    src: '/images/olamide-sax-hero.jpg',
+    src: '/images/IMG_0298.JPG',
     alt: 'Olamide Sax performing with saxophone',
     category: 'Performance',
   },
   {
-    src: '/images/olamide-sax-mayor.jpg',
-    alt: 'Olamide Sax with dignitary',
+    src: '/images/IMG_0986.jpg',
+    alt: 'Olamide Sax performance',
     category: 'Event',
   },
   {
-    src: '/images/olamide-sax-portrait.jpg',
+    src: '/images/IMG_0923.jpeg',
     alt: 'Olamide Sax portrait',
     category: 'Portrait',
+  },
+  {
+    src: '/images/IMG_0798.png',
+    alt: 'Olamide Sax with saxophone',
+    category: 'Performance',
+  },
+  {
+    src: '/images/IMG_0964.jpeg',
+    alt: 'Olamide Sax event',
+    category: 'Event',
   },
 ];
 
