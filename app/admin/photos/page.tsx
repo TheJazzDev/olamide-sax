@@ -8,8 +8,8 @@ interface PhotoItem {
   id: string;
   title: string;
   url: string;
-  category: string;
-  alt: string;
+  category: string | null;
+  alt: string | null;
 }
 
 export default function AdminPhotosPage() {
@@ -91,7 +91,8 @@ export default function AdminPhotosPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.url) {
+    // Only require URL for new photos, not for editing
+    if (!editingId && !formData.url) {
       alert('Please upload an image first');
       return;
     }
@@ -102,24 +103,40 @@ export default function AdminPhotosPage() {
         const response = await fetch(`/api/photos/${editingId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            title: formData.title,
+            url: formData.url,
+            category: formData.category,
+            alt: formData.alt,
+          }),
         });
-        if (!response.ok) throw new Error('Failed to update');
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Failed to update');
+        }
         alert('Photo updated successfully!');
       } else {
         const response = await fetch('/api/photos', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            title: formData.title,
+            url: formData.url,
+            category: formData.category,
+            alt: formData.alt,
+          }),
         });
-        if (!response.ok) throw new Error('Failed to create');
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Failed to create');
+        }
         alert('Photo created successfully!');
       }
       fetchPhotos();
       resetForm();
     } catch (error) {
       console.error('Error saving photo:', error);
-      alert('Failed to save photo');
+      alert(error instanceof Error ? error.message : 'Failed to save photo');
     } finally {
       setSaving(false);
     }
@@ -129,8 +146,8 @@ export default function AdminPhotosPage() {
     setFormData({
       title: photo.title,
       url: photo.url,
-      category: photo.category,
-      alt: photo.alt,
+      category: photo.category || 'Performance',
+      alt: photo.alt || '',
     });
     setEditingId(photo.id);
     setShowForm(true);
@@ -310,7 +327,7 @@ export default function AdminPhotosPage() {
             </div>
             <div className="p-4">
               <span className="text-xs font-medium text-[#c9a227] uppercase tracking-wide">
-                {photo.category}
+                {photo.category || 'Uncategorized'}
               </span>
               <h3 className="font-semibold text-gray-900 mt-1">{photo.title}</h3>
               <p className="text-sm text-gray-500 mt-1 truncate">{photo.url}</p>

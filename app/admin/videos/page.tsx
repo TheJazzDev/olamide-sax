@@ -14,12 +14,15 @@ interface VideoItem {
   displayOrder: number;
 }
 
+type VideoCategory = 'all' | 'SAXOPHONE' | 'VOCAL' | 'KEYBOARD' | 'UNCATEGORIZED';
+
 export default function AdminVideosPage() {
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
+  const [filterCategory, setFilterCategory] = useState<VideoCategory>('all');
   const [formData, setFormData] = useState({
     title: '',
     url: '',
@@ -52,23 +55,35 @@ export default function AdminVideosPage() {
     setSaving(true);
 
     try {
+      // Convert empty category to null
+      const dataToSend = {
+        ...formData,
+        category: formData.category || null,
+      };
+
       if (editingId) {
         const response = await fetch(`/api/videos/${editingId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(dataToSend),
         });
 
-        if (!response.ok) throw new Error('Failed to update');
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Failed to update');
+        }
         alert('Video updated successfully!');
       } else {
         const response = await fetch('/api/videos', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(dataToSend),
         });
 
-        if (!response.ok) throw new Error('Failed to create');
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || 'Failed to create');
+        }
         alert('Video created successfully!');
       }
 
@@ -76,7 +91,7 @@ export default function AdminVideosPage() {
       resetForm();
     } catch (error) {
       console.error('Error saving video:', error);
-      alert('Failed to save video');
+      alert(error instanceof Error ? error.message : 'Failed to save video');
     } finally {
       setSaving(false);
     }
@@ -116,6 +131,21 @@ export default function AdminVideosPage() {
     setShowForm(false);
   };
 
+  // Filter videos by category
+  const filteredVideos = filterCategory === 'all'
+    ? videos
+    : filterCategory === 'UNCATEGORIZED'
+    ? videos.filter(video => !video.category)
+    : videos.filter(video => video.category === filterCategory);
+
+  const videoCategories = [
+    { id: 'all' as VideoCategory, label: 'All Videos', count: videos.length },
+    { id: 'SAXOPHONE' as VideoCategory, label: 'Saxophone', count: videos.filter(v => v.category === 'SAXOPHONE').length },
+    { id: 'VOCAL' as VideoCategory, label: 'Vocal', count: videos.filter(v => v.category === 'VOCAL').length },
+    { id: 'KEYBOARD' as VideoCategory, label: 'Keyboard', count: videos.filter(v => v.category === 'KEYBOARD').length },
+    { id: 'UNCATEGORIZED' as VideoCategory, label: 'Uncategorized', count: videos.filter(v => !v.category).length },
+  ];
+
   if (loading) {
     return (
       <div className="p-6 lg:p-8 flex items-center justify-center min-h-screen">
@@ -127,7 +157,7 @@ export default function AdminVideosPage() {
   return (
     <div className="p-4 sm:p-6 md:p-7 lg:p-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Videos</h1>
           <p className="text-gray-600 mt-1">Manage video content for the Media page</p>
@@ -139,6 +169,25 @@ export default function AdminVideosPage() {
           <Plus className="w-5 h-5" />
           Add Video
         </button>
+      </div>
+
+      {/* Category Filters */}
+      <div className="mb-6">
+        <div className="flex flex-wrap gap-2">
+          {videoCategories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setFilterCategory(cat.id)}
+              className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                filterCategory === cat.id
+                  ? 'bg-[#c9a227] text-[#1a1a2e]'
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+              }`}
+            >
+              {cat.label} {cat.count > 0 && `(${cat.count})`}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Form Modal */}
@@ -241,16 +290,23 @@ export default function AdminVideosPage() {
       {/* Videos List */}
       <div className="bg-white rounded-xl overflow-hidden">
         <div className="p-4 bg-gray-50 border-b border-gray-100">
-          <h2 className="font-semibold text-gray-900">{videos.length} Videos</h2>
+          <h2 className="font-semibold text-gray-900">
+            {filteredVideos.length} {filterCategory === 'all' ? 'Total' : ''} Videos
+            {filterCategory !== 'all' && ` (${videoCategories.find(c => c.id === filterCategory)?.label})`}
+          </h2>
         </div>
-        {videos.length === 0 ? (
+        {filteredVideos.length === 0 ? (
           <div className="p-8 text-center text-gray-500">
             <VideoIcon className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>No videos yet. Add your first video!</p>
+            <p>
+              {videos.length === 0
+                ? 'No videos yet. Add your first video!'
+                : `No videos in this category.`}
+            </p>
           </div>
         ) : (
           <div className="divide-y divide-gray-100">
-            {videos.map((video) => (
+            {filteredVideos.map((video) => (
               <div key={video.id} className="p-4 hover:bg-gray-50 transition-colors">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center shrink-0">

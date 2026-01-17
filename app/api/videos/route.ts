@@ -23,7 +23,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, url, platform, description, featured, displayOrder } = body;
+    const { title, url, platform, description, category, featured, displayOrder } = body;
 
     const video = await prisma.video.create({
       data: {
@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
         url,
         platform,
         description,
+        category: category || null,
         featured: featured || false,
         displayOrder: displayOrder || 0,
       },

@@ -37,7 +37,7 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { title, url, platform, description, featured, displayOrder } = body;
+    const { title, url, platform, description, category, featured, displayOrder } = body;
 
     const video = await prisma.video.update({
       where: { id: parseInt(id) },
@@ -46,6 +46,7 @@ export async function PUT(
         url,
         platform,
         description,
+        category: category || null,
         featured,
         displayOrder,
       },
