@@ -9,7 +9,7 @@ interface PressItem {
   source: string;
   url: string;
   excerpt: string;
-  date: string;
+  publishedAt: string | null;
 }
 
 export default function AdminPressPage() {
@@ -23,7 +23,7 @@ export default function AdminPressPage() {
     source: '',
     url: '',
     excerpt: '',
-    date: new Date().getFullYear().toString(),
+    publishedAt: new Date().toISOString().split('T')[0],
   });
 
   useEffect(() => {
@@ -81,7 +81,7 @@ export default function AdminPressPage() {
       source: item.source,
       url: item.url,
       excerpt: item.excerpt,
-      date: item.date,
+      publishedAt: item.publishedAt ? new Date(item.publishedAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
     });
     setEditingId(item.id);
     setShowForm(true);
@@ -109,7 +109,7 @@ export default function AdminPressPage() {
       source: '',
       url: '',
       excerpt: '',
-      date: new Date().getFullYear().toString(),
+      publishedAt: new Date().toISOString().split('T')[0],
     });
     setEditingId(null);
     setShowForm(false);
@@ -194,14 +194,13 @@ export default function AdminPressPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Publication Date / Year</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Publication Date</label>
                 <input
-                  type="text"
-                  value={formData.date}
-                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                  type="date"
+                  value={formData.publishedAt}
+                  onChange={(e) => setFormData({ ...formData, publishedAt: e.target.value })}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none text-gray-900 placeholder:text-gray-400"
-                  placeholder="2024"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none text-gray-900"
                 />
               </div>
               <div className="flex gap-4 pt-4">
@@ -238,7 +237,9 @@ export default function AdminPressPage() {
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-sm font-medium text-[#c9a227]">{item.source}</span>
                   <span className="text-gray-400">•</span>
-                  <span className="text-sm text-gray-500">{item.date}</span>
+                  <span className="text-sm text-gray-500">
+                    {item.publishedAt ? new Date(item.publishedAt).toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' }) : 'No date'}
+                  </span>
                 </div>
                 <h3 className="font-bold text-gray-900 text-lg mb-2">{item.title}</h3>
                 {item.excerpt && (

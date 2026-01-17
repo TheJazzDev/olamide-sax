@@ -340,64 +340,70 @@ export default function Home() {
             variants={staggerContainer}
           >
             {/* Saxophone */}
-            <motion.div
-              className="group bg-linear-to-br from-white to-gray-50 p-6 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-[#c9a227]/20 transition-all duration-300 border-2 border-gray-100 hover:border-[#c9a227] hover:-translate-y-3"
-              variants={scaleIn}
-              whileHover={{ y: -10 }}
-            >
+            <Link href="/media?category=SAXOPHONE">
               <motion.div
-                className="w-14 h-14 sm:w-16 sm:h-16 bg-linear-to-br from-[#c9a227] to-[#d4ac3a] rounded-2xl flex items-center justify-center mb-4 sm:mb-6 shadow-lg"
-                whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
-                transition={{ duration: 0.5 }}
+                className="group bg-linear-to-br from-white to-gray-50 p-6 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-[#c9a227]/20 transition-all duration-300 border-2 border-gray-100 hover:border-[#c9a227] hover:-translate-y-3 cursor-pointer"
+                variants={scaleIn}
+                whileHover={{ y: -10 }}
               >
-                <Music2 className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                <motion.div
+                  className="w-14 h-14 sm:w-16 sm:h-16 bg-linear-to-br from-[#c9a227] to-[#d4ac3a] rounded-2xl flex items-center justify-center mb-4 sm:mb-6 shadow-lg"
+                  whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Music2 className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                </motion.div>
+                <h3 className="text-lg sm:text-xl md:text-2xl font-black text-[#1a1a2e] mb-2 sm:mb-3">Saxophonist</h3>
+                <p className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed">
+                  Lead saxophonist with expressive interpretation skills, bringing soul and emotion
+                  to every performance through masterful saxophone artistry.
+                </p>
               </motion.div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-black text-[#1a1a2e] mb-2 sm:mb-3">Saxophonist</h3>
-              <p className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed">
-                Lead saxophonist with expressive interpretation skills, bringing soul and emotion
-                to every performance through masterful saxophone artistry.
-              </p>
-            </motion.div>
+            </Link>
 
             {/* Vocals */}
-            <motion.div
-              className="group bg-linear-to-br from-white to-gray-50 p-6 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-[#c9a227]/20 transition-all duration-300 border-2 border-gray-100 hover:border-[#c9a227] hover:-translate-y-3"
-              variants={scaleIn}
-              whileHover={{ y: -10 }}
-            >
+            <Link href="/media?category=VOCAL">
               <motion.div
-                className="w-14 h-14 sm:w-16 sm:h-16 bg-linear-to-br from-[#c9a227] to-[#d4ac3a] rounded-2xl flex items-center justify-center mb-4 sm:mb-6 shadow-lg"
-                whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
-                transition={{ duration: 0.5 }}
+                className="group bg-linear-to-br from-white to-gray-50 p-6 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-[#c9a227]/20 transition-all duration-300 border-2 border-gray-100 hover:border-[#c9a227] hover:-translate-y-3 cursor-pointer"
+                variants={scaleIn}
+                whileHover={{ y: -10 }}
               >
-                <Mic className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                <motion.div
+                  className="w-14 h-14 sm:w-16 sm:h-16 bg-linear-to-br from-[#c9a227] to-[#d4ac3a] rounded-2xl flex items-center justify-center mb-4 sm:mb-6 shadow-lg"
+                  whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Mic className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                </motion.div>
+                <h3 className="text-lg sm:text-xl md:text-2xl font-black text-[#1a1a2e] mb-2 sm:mb-3">Vocalist</h3>
+                <p className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed">
+                  Powerful vocal performances spanning gospel worship, African contemporary,
+                  and repertoire music with authentic emotional delivery.
+                </p>
               </motion.div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-black text-[#1a1a2e] mb-2 sm:mb-3">Vocalist</h3>
-              <p className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed">
-                Powerful vocal performances spanning gospel worship, African contemporary,
-                and repertoire music with authentic emotional delivery.
-              </p>
-            </motion.div>
+            </Link>
 
             {/* Keyboard */}
-            <motion.div
-              className="group bg-linear-to-br from-white to-gray-50 p-6 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-[#c9a227]/20 transition-all duration-300 border-2 border-gray-100 hover:border-[#c9a227] hover:-translate-y-3"
-              variants={scaleIn}
-              whileHover={{ y: -10 }}
-            >
+            <Link href="/media?category=KEYBOARD">
               <motion.div
-                className="w-14 h-14 sm:w-16 sm:h-16 bg-linear-to-br from-[#c9a227] to-[#d4ac3a] rounded-2xl flex items-center justify-center mb-4 sm:mb-6 shadow-lg"
-                whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
-                transition={{ duration: 0.5 }}
+                className="group bg-linear-to-br from-white to-gray-50 p-6 sm:p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-[#c9a227]/20 transition-all duration-300 border-2 border-gray-100 hover:border-[#c9a227] hover:-translate-y-3 cursor-pointer"
+                variants={scaleIn}
+                whileHover={{ y: -10 }}
               >
-                <Piano className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                <motion.div
+                  className="w-14 h-14 sm:w-16 sm:h-16 bg-linear-to-br from-[#c9a227] to-[#d4ac3a] rounded-2xl flex items-center justify-center mb-4 sm:mb-6 shadow-lg"
+                  whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Piano className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                </motion.div>
+                <h3 className="text-lg sm:text-xl md:text-2xl font-black text-[#1a1a2e] mb-2 sm:mb-3">Keyboardist</h3>
+                <p className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed">
+                  Skilled keyboard harmony creating immersive musical experiences,
+                  complementing vocals and saxophone for complete performances.
+                </p>
               </motion.div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-black text-[#1a1a2e] mb-2 sm:mb-3">Keyboardist</h3>
-              <p className="text-xs sm:text-sm md:text-base text-gray-600 leading-relaxed">
-                Skilled keyboard harmony creating immersive musical experiences,
-                complementing vocals and saxophone for complete performances.
-              </p>
-            </motion.div>
+            </Link>
           </motion.div>
         </motion.div>
       </section>

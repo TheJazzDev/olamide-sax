@@ -9,6 +9,7 @@ interface VideoItem {
   url: string;
   platform: string;
   description: string | null;
+  category: string | null;
   featured: boolean;
   displayOrder: number;
 }
@@ -24,6 +25,7 @@ export default function AdminVideosPage() {
     url: '',
     platform: 'youtube',
     description: '',
+    category: '',
     featured: false,
     displayOrder: 0,
   });
@@ -86,6 +88,7 @@ export default function AdminVideosPage() {
       url: video.url,
       platform: video.platform,
       description: video.description || '',
+      category: video.category || '',
       featured: video.featured,
       displayOrder: video.displayOrder,
     });
@@ -108,7 +111,7 @@ export default function AdminVideosPage() {
   };
 
   const resetForm = () => {
-    setFormData({ title: '', url: '', platform: 'youtube', description: '', featured: false, displayOrder: 0 });
+    setFormData({ title: '', url: '', platform: 'youtube', description: '', category: '', featured: false, displayOrder: 0 });
     setEditingId(null);
     setShowForm(false);
   };
@@ -181,6 +184,19 @@ export default function AdminVideosPage() {
                 </select>
               </div>
               <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                <select
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#c9a227] focus:ring-2 focus:ring-[#c9a227]/20 outline-none bg-white text-gray-900"
+                >
+                  <option value="">Select category</option>
+                  <option value="SAXOPHONE">Saxophone</option>
+                  <option value="VOCAL">Vocal</option>
+                  <option value="KEYBOARD">Keyboard</option>
+                </select>
+              </div>
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
                 <textarea
                   value={formData.description}
@@ -241,7 +257,16 @@ export default function AdminVideosPage() {
                     <Youtube className="w-6 h-6 text-red-500" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900">{video.title}</h3>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-semibold text-gray-900">{video.title}</h3>
+                      {video.category && (
+                        <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-[#c9a227]/10 text-[#c9a227]">
+                          {video.category === 'SAXOPHONE' && 'Saxophone'}
+                          {video.category === 'VOCAL' && 'Vocal'}
+                          {video.category === 'KEYBOARD' && 'Keyboard'}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-sm text-gray-500 mt-1">{video.description}</p>
                     <a
                       href={video.url}

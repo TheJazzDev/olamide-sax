@@ -79,16 +79,18 @@ export default function ContactPage() {
                 <h3 className="font-bold text-[#1a1a2e] mb-3 sm:mb-4">Follow on Social Media</h3>
                 <div className="flex items-center gap-4">
                   <a
-                    href="https://youtube.com/@olamidesax"
+                    href="https://www.tiktok.com/@lammywondermusic?_r=1&_t=ZS-937JbAE0FA8"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-12 h-12 bg-[#1a1a2e] rounded-full flex items-center justify-center text-white hover:bg-[#c9a227] hover:text-[#1a1a2e] transition-colors"
-                    aria-label="YouTube"
+                    aria-label="TikTok"
                   >
-                    <Youtube className="w-5 h-5" />
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                    </svg>
                   </a>
                   <a
-                    href="#"
+                    href="https://www.instagram.com/lammy_wonder?igsh=MTVwMHRoNWpmZHBycQ%3D%3D&utm_source=qr"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-12 h-12 bg-[#1a1a2e] rounded-full flex items-center justify-center text-white hover:bg-[#c9a227] hover:text-[#1a1a2e] transition-colors"
@@ -97,13 +99,22 @@ export default function ContactPage() {
                     <Instagram className="w-5 h-5" />
                   </a>
                   <a
-                    href="#"
+                    href="https://www.facebook.com/share/19kyBuitHZ/?mibextid=wwXIfr"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-12 h-12 bg-[#1a1a2e] rounded-full flex items-center justify-center text-white hover:bg-[#c9a227] hover:text-[#1a1a2e] transition-colors"
                     aria-label="Facebook"
                   >
                     <Facebook className="w-5 h-5" />
+                  </a>
+                  <a
+                    href="https://youtube.com/@olamidesax"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-12 h-12 bg-[#1a1a2e] rounded-full flex items-center justify-center text-white hover:bg-[#c9a227] hover:text-[#1a1a2e] transition-colors"
+                    aria-label="YouTube"
+                  >
+                    <Youtube className="w-5 h-5" />
                   </a>
                 </div>
               </div>

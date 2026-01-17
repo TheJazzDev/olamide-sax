@@ -103,7 +103,13 @@ export default async function PressPage() {
                         )}
                         <div className='flex items-center justify-between'>
                           <span className='text-sm text-gray-500'>
-                            {String(item.createdAt)}
+                            {item.publishedAt
+                              ? new Date(item.publishedAt).toLocaleDateString('en-GB', {
+                                  year: 'numeric',
+                                  month: 'long',
+                                  day: 'numeric',
+                                })
+                              : 'Date not available'}
                           </span>
                           {item.url && item.url !== '#' && (
                             <a
