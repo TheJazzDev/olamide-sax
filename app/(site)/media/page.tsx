@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -36,7 +36,7 @@ interface PhotoItem {
 type TabType = 'videos' | 'audio' | 'photos';
 type VideoCategory = 'all' | 'SAXOPHONE' | 'VOCAL' | 'KEYBOARD';
 
-export default function MediaPage() {
+function MediaContent() {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<TabType>('videos');
   const [videoCategory, setVideoCategory] = useState<VideoCategory>('all');
@@ -349,5 +349,20 @@ export default function MediaPage() {
         </div>
       </section>
     </>
+  );
+}
+
+export default function MediaPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-[#c9a227] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading media...</p>
+        </div>
+      </div>
+    }>
+      <MediaContent />
+    </Suspense>
   );
 }
