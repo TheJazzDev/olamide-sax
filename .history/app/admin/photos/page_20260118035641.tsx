@@ -310,7 +310,7 @@ export default function AdminPhotosPage() {
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {photos.map((photo) => (
           <div key={photo.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-            <div className="relative aspect-4/3 bg-gray-200">
+            <div className="relative aspect-[4/3 bg-gray-200">
               {photo.url ? (
                 <Image
                   src={photo.url}
