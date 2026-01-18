@@ -4,9 +4,9 @@ import { prisma } from '@/lib/prisma-db';
 // GET all videos
 export async function GET() {
   try {
-    const videos = await prisma.video.findMany({
+    const videos = await prisma.videos.findMany({
       orderBy: {
-        displayOrder: 'asc',
+        display_order: 'asc',
       },
     });
     return NextResponse.json(videos);
@@ -23,9 +23,9 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, url, platform, description, category, featured, displayOrder } = body;
+    const { title, url, platform, description, category, featured, display_order } = body;
 
-    const video = await prisma.video.create({
+    const video = await prisma.videos.create({
       data: {
         title,
         url,
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
         description,
         category: category || null,
         featured: featured || false,
-        displayOrder: displayOrder || 0,
+        display_order: display_order || 0,
       },
     });
 

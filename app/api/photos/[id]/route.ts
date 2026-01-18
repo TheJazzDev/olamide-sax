@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const photo = await prisma.photo.findUnique({
+    const photo = await prisma.photos.findUnique({
       where: { id: parseInt(id) },
     });
 
@@ -36,7 +36,7 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
-    const photo = await prisma.photo.update({
+    const photo = await prisma.photos.update({
       where: { id: parseInt(id) },
       data: body,
     });
@@ -57,7 +57,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    await prisma.photo.delete({
+    await prisma.photos.delete({
       where: { id: parseInt(id) },
     });
 

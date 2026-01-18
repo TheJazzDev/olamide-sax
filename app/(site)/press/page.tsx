@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 async function getPressItems() {
   try {
     const press = await prisma.press.findMany({
-      orderBy: { publishedAt: 'desc' },
+      orderBy: { published_at: 'desc' },
     });
     return press;
   } catch (error) {
@@ -72,15 +72,15 @@ export default async function PressPage() {
               pressItems.map(
                 (item: {
                   id: number;
-                  createdAt: Date;
-                  updatedAt: Date;
+                  created_at: Date;
+                  updated_at: Date;
                   title: string;
                   url: string | null;
-                  displayOrder: number;
+                  display_order: number;
                   source: string;
-                  imageUrl: string | null;
+                  image_url: string | null;
                   excerpt: string | null;
-                  publishedAt: Date | null;
+                  published_at: Date | null;
                 }) => (
                   <article
                     key={item.id}
@@ -103,8 +103,8 @@ export default async function PressPage() {
                         )}
                         <div className='flex items-center justify-between'>
                           <span className='text-sm text-gray-500'>
-                            {item.publishedAt
-                              ? new Date(item.publishedAt).toLocaleDateString('en-GB', {
+                            {item.published_at
+                              ? new Date(item.published_at).toLocaleDateString('en-GB', {
                                   year: 'numeric',
                                   month: 'long',
                                   day: 'numeric',

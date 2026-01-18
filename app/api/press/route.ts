@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const press = await prisma.press.findMany({
       orderBy: {
-        displayOrder: 'asc',
+        display_order: 'asc',
       },
     });
     return NextResponse.json(press);
@@ -21,17 +21,17 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, source, url, imageUrl, excerpt, publishedAt, displayOrder } = body;
+    const { title, source, url, image_url, excerpt, published_at, display_order } = body;
 
     const press = await prisma.press.create({
       data: {
         title,
         source,
         url,
-        imageUrl,
+        image_url,
         excerpt,
-        publishedAt: publishedAt ? new Date(publishedAt) : null,
-        displayOrder: displayOrder || 0,
+        published_at: published_at ? new Date(published_at) : null,
+        display_order: display_order || 0,
       },
     });
 

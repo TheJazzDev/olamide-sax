@@ -8,7 +8,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const video = await prisma.video.findUnique({
+    const video = await prisma.videos.findUnique({
       where: { id: parseInt(id) },
     });
 
@@ -37,9 +37,9 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { title, url, platform, description, category, featured, displayOrder } = body;
+    const { title, url, platform, description, category, featured, display_order } = body;
 
-    const video = await prisma.video.update({
+    const video = await prisma.videos.update({
       where: { id: parseInt(id) },
       data: {
         title,
@@ -48,7 +48,7 @@ export async function PUT(
         description,
         category: category || null,
         featured,
-        displayOrder,
+        display_order,
       },
     });
 
@@ -69,7 +69,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    await prisma.video.delete({
+    await prisma.videos.delete({
       where: { id: parseInt(id) },
     });
 

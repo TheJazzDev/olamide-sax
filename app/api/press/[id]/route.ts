@@ -40,7 +40,7 @@ export async function PUT(
       where: { id: parseInt(id) },
       data: {
         ...body,
-        publishedAt: body.publishedAt ? new Date(body.publishedAt) : null,
+        published_at: body.published_at ? new Date(body.published_at) : null,
       },
     });
 

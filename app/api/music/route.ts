@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const music = await prisma.music.findMany({
       orderBy: {
-        displayOrder: 'asc',
+        display_order: 'asc',
       },
     });
     return NextResponse.json(music);
@@ -21,16 +21,16 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, platform, url, releaseYear, coverUrl, displayOrder } = body;
+    const { title, platform, url, release_year, cover_url, display_order } = body;
 
     const music = await prisma.music.create({
       data: {
         title,
         platform,
         url,
-        releaseYear,
-        coverUrl,
-        displayOrder: displayOrder || 0,
+        release_year,
+        cover_url,
+        display_order: display_order || 0,
       },
     });
 

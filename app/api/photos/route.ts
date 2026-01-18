@@ -3,9 +3,9 @@ import { prisma } from '@/lib/prisma-db';
 
 export async function GET() {
   try {
-    const photos = await prisma.photo.findMany({
+    const photos = await prisma.photos.findMany({
       orderBy: {
-        displayOrder: 'asc',
+        display_order: 'asc',
       },
     });
     return NextResponse.json(photos);
@@ -21,16 +21,16 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, url, alt, category, featured, displayOrder } = body;
+    const { title, url, alt, category, featured, display_order } = body;
 
-    const photo = await prisma.photo.create({
+    const photo = await prisma.photos.create({
       data: {
         title,
         url,
         alt,
         category,
         featured: featured || false,
-        displayOrder: displayOrder || 0,
+        display_order: display_order || 0,
       },
     });
 
