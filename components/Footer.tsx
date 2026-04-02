@@ -31,7 +31,7 @@ export default function Footer() {
             </p>
             <div className="flex items-center gap-3">
               <a
-                href="https://www.tiktok.com/@lammywondermusic?_r=1&_t=ZS-937JbAE0FA8"
+                href="https://www.tiktok.com/@olamidesax"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-[#c9a227] transition-all hover:scale-110 shadow-lg"
@@ -42,7 +42,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://www.instagram.com/olamide.sax/"
+                href="https://www.instagram.com/olamide.sax"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-[#c9a227] transition-all hover:scale-110 shadow-lg"
