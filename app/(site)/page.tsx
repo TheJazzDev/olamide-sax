@@ -283,8 +283,7 @@ export default function Home() {
               className="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed mb-6 sm:mb-8"
               variants={fadeInUp}
             >
-              <strong className="text-[#1a1a2e] font-bold">Olamide Sax</strong> (Olaniyan Olamide Phillips) is a professional vocalist and instrumentalist
-              whose work spans gospel worship, African contemporary music, and cross-cultural repertoire performance.
+              <strong className="text-[#1a1a2e] font-bold">Olamide Sax</strong> (Olaniyan Olamide Phillips) is a Nigerian-born multidisciplinary musician and participatory artist whose practice spans Afro-fusion, live improvisation, theatre, and community-based creative engagement. With over a decade of artistic development rooted in Yoruba percussion and contemporary African music, he has performed across cultural and public events in the UK, including engagements attended by the Mayor of Doncaster and distinguished council leaders.
               With over a decade of artistic development, he has performed at public cultural events in the UK,
               including engagements attended by the Mayor of Doncaster and distinguished council leaders.
             </motion.p>
