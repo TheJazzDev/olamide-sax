@@ -80,20 +80,6 @@ export default function AboutPage() {
                 </p>
               </div>
 
-              {/* Artistic Identity Section */}
-              <div className="bg-[#1a1a2e] text-white p-6 sm:p-8 rounded-xl mb-6 sm:mb-8">
-                <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-3">
-                  <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-[#c9a227]" />
-                  Artistic Identity
-                </h3>
-                <p className="text-gray-300 leading-relaxed">
-                  Olamide&apos;s work is rooted in faith-inspired gospel music while embracing African
-                  musical heritage and contemporary performance techniques. His performances often
-                  combine vocals, keyboard harmony, and expressive saxophone interpretation, creating
-                  immersive musical experiences for diverse audiences.
-                </p>
-              </div>
-
               {/* Stats */}
               <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 <div className="text-center p-4 sm:p-6 bg-gray-50 rounded-xl">
@@ -109,7 +95,7 @@ export default function AboutPage() {
               {/* Key Qualities */}
               <div className="space-y-4">
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                  <div className="w-12 h-12 bg-[#c9a227]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-[#c9a227]/10 rounded-lg flex items-center justify-center shrink-0">
                     <Music2 className="w-6 h-6 text-[#c9a227]" />
                   </div>
                   <div>
@@ -121,7 +107,7 @@ export default function AboutPage() {
                 </div>
 
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                  <div className="w-12 h-12 bg-[#c9a227]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-[#c9a227]/10 rounded-lg flex items-center justify-center shrink-0">
                     <Award className="w-6 h-6 text-[#c9a227]" />
                   </div>
                   <div>
@@ -133,7 +119,7 @@ export default function AboutPage() {
                 </div>
 
                 <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                  <div className="w-12 h-12 bg-[#c9a227]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-[#c9a227]/10 rounded-lg flex items-center justify-center shrink-0">
                     <Users className="w-6 h-6 text-[#c9a227]" />
                   </div>
                   <div>
@@ -155,6 +141,60 @@ export default function AboutPage() {
                   <ChevronRight className="w-5 h-5" />
                 </Link>
               </div>
+            </div>
+          </div>
+
+          {/* Artistic Identity Section - full width */}
+          <div className="mt-12 sm:mt-16 md:mt-20 bg-[#1a1a2e] text-white p-5 sm:p-8 md:p-10 lg:p-12 rounded-xl">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6 flex items-center gap-3">
+              <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-[#c9a227]" />
+              Artistic Identity
+            </h3>
+            <div className="text-gray-300 text-sm sm:text-base leading-relaxed space-y-3 sm:space-y-4 md:columns-2 md:gap-8 lg:gap-12">
+              <p className="break-inside-avoid">
+                Olamide Phillips Olaniyan, professionally known as Olamide Sax, is a Nigerian-born
+                multidisciplinary musician, performer, and participatory artist based in the United
+                Kingdom. His artistic journey began in 2010 through traditional Yoruba percussion,
+                developing first with indigenous instruments such as the Cord/Omele before expanding
+                into djembe, omele bàtá, and talking drum. Rooted deeply in African musical heritage,
+                these formative experiences shaped his rhythmic understanding, improvisational
+                instinct, and connection to storytelling through sound.
+              </p>
+              <p className="break-inside-avoid">
+                Over the years, his practice evolved into a broader Afro-fusion expression spanning
+                saxophone, vocals, keyboard, and live improvisational performance. Drawing inspiration
+                from Yoruba musical traditions alongside contemporary African and global sounds,
+                Olamide creates work that blends rhythm, spirituality, theatre, and cultural expression.
+              </p>
+              <p className="break-inside-avoid">
+                Since relocating to the UK, Olamide has continued to build an expanding creative
+                presence across live music, theatre, and community arts. He has performed at cultural
+                and multidisciplinary events including ÀTÙPÀ at CAST, where he delivered the opening
+                saxophone performance and appeared as the theatrical character Adigun, demonstrating
+                his versatility across both music and stage performance. He has also collaborated with
+                artists and bands at ArtBomb, performing alongside The Skintone UK in immersive live
+                music settings that fused reggae, funk, ska, folk, and improvisational sound.
+              </p>
+              <p className="break-inside-avoid">
+                His performance work further includes appearances at Black History Month and Black
+                &amp; Minority Ethnic cultural events in Doncaster, where he presented African musical
+                works through saxophone, vocals, and keyboard performance before community leaders
+                and distinguished public figures. Alongside live performance, he has participated in
+                open mic and theatre-based collaborations with creatives connected to Utopia Theatre
+                and other independent arts spaces across South Yorkshire.
+              </p>
+              <p className="break-inside-avoid">
+                Alongside his performance practice, Olamide is currently developing within
+                participatory arts and creative health through a traineeship with darts in partnership
+                with Maya Productions. Through this work, he engages with community-centred creative
+                practice, exploring how music, movement, and collective participation can support
+                wellbeing, connection, and cultural exchange across diverse groups and settings.
+              </p>
+              <p className="break-inside-avoid">
+                As both a performer and facilitator, Olamide&apos;s work is driven by improvisation,
+                collaboration, and the desire to create meaningful artistic experiences that bridge
+                cultures, generations, and communities.
+              </p>
             </div>
           </div>
         </div>
